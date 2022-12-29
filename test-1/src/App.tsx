@@ -6,16 +6,15 @@ import { GlobalStyle } from "./styles/global";
 
 function App() {
 
-  const [circulos, setCirculos] = useState({
-    x: 0,
-    y: 0,
-    qtdCirculos: 0
-  });
-
   const [allCirculos, setAllCirculos] = useState({
     eixoX: [] as number[],
     eixoY: [] as number[],
   });
+
+  // const [revertCirculos, setRevertCirculos] = useState({
+  //   eixoX: [] as number[],
+  //   eixoY: [] as number[],
+  // });
 
   const [jsxCirculos, setJsxCirculos] = useState({
     circulos: [] as JSX.Element[]
@@ -28,7 +27,6 @@ function App() {
     let eixoY: number[] = [];
 
     const element = document.getElementById('container');
-    let count = 0;
 
     element?.addEventListener('click', event => {
 
@@ -38,16 +36,6 @@ function App() {
       if (elementoclick === 'button') {
         return;
       }
-
-      count = count + 1;
-
-      console.log('count ' + count);
-
-      setCirculos({
-        x: event.clientX,
-        y: event.clientY,
-        qtdCirculos: count
-      });
 
       eixoX.push(event.clientX);
       eixoY.push(event.clientY);
@@ -66,8 +54,8 @@ function App() {
     let pontos: JSX.Element[] = [];
 
     let i;
-    if (circulos.qtdCirculos > 0) {
-      for (i = 0; i < circulos.qtdCirculos; i++) {
+    if (allCirculos.eixoX.length > 0) {
+      for (i = 0; i < allCirculos.eixoX.length; i++) {
         let x = allCirculos.eixoX[i];
         let y = allCirculos.eixoY[i];
         pontos.push(
@@ -76,33 +64,52 @@ function App() {
       }
       setJsxCirculos({ circulos: pontos });
     }
-  }, [allCirculos.eixoX, allCirculos.eixoY, circulos.qtdCirculos]);
+  }, [allCirculos.eixoX, allCirculos.eixoY]);
 
+  //Remover circulo
   function removerCirculo() {
 
-    if (circulos.qtdCirculos < 1) {
+    let pontos: JSX.Element[] = [];
+
+    if (allCirculos.eixoX.length < 1) {
       return;
     }
-    let newqtdCirculos = circulos.qtdCirculos - 1;
-    setCirculos({
-      ...circulos,
-      qtdCirculos: newqtdCirculos
-    })
-    allCirculos.eixoX.pop();
-    allCirculos.eixoY.pop();
+
+    let eixox = allCirculos.eixoX.pop();
+    let eixoy = allCirculos.eixoY.pop();
     jsxCirculos.circulos.pop();
-    // console.log(allCirculos);
-    // console.log(jsxCirculos.circulos);
+
+    // setRevertCirculos({
+    //   eixoX: eixox,
+    //   eixoY: eixoy
+    // })
+
+    for (let i = 0; i < allCirculos.eixoX.length; i++) {
+      let x = allCirculos.eixoX[i];
+      let y = allCirculos.eixoY[i];
+      pontos.push(
+        <Ponto x={x} y={y} key={i} />
+      )
+    }
+    setJsxCirculos({ circulos: pontos });
+
   }
+
+  //Refazer circulo
+  function refazerCirculo() {
+
+  }
+
+  console.log(allCirculos.eixoX.length)
 
   return (
     <Element id="container">
       {
-        circulos.qtdCirculos > 0 &&
+        allCirculos.eixoX.length > 0 &&
         jsxCirculos.circulos
       }
       <Button onClick={removerCirculo} id='button'>Desfazer</Button>
-      <ButtonRefazer id='button'>Refazer</ButtonRefazer>
+      <ButtonRefazer onClick={refazerCirculo} id='button'>Refazer</ButtonRefazer>
       <GlobalStyle />
     </Element>
   );
