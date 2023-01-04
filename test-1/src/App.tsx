@@ -28,7 +28,7 @@ function App() {
 
     element?.addEventListener('click', event => {
 
-      // removento o evento de click dos buttons
+      // removendo o evento de click dos buttons
       const target = event.target as HTMLTextAreaElement;
       let elementoclick = target.id;
       if (elementoclick === 'button') {
