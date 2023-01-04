@@ -11,10 +11,8 @@ function App() {
     eixoY: [] as number[],
   });
 
-  // const [revertCirculos, setRevertCirculos] = useState({
-  //   eixoX: [] as number[],
-  //   eixoY: [] as number[],
-  // });
+  const [rvtCirculosEixoX, setRvCirculosEixoX] = useState<(number)[]>([]);
+  const [rvtCirculosEixoY, setRvCirculosEixoY] = useState<(number)[]>([]);
 
   const [jsxCirculos, setJsxCirculos] = useState({
     circulos: [] as JSX.Element[]
@@ -75,14 +73,12 @@ function App() {
       return;
     }
 
-    let eixox = allCirculos.eixoX.pop();
-    let eixoy = allCirculos.eixoY.pop();
-    jsxCirculos.circulos.pop();
+    let eixox = allCirculos.eixoX.pop() as number;
+    let eixoy = allCirculos.eixoY.pop() as number;
+    jsxCirculos.circulos.pop()
 
-    // setRevertCirculos({
-    //   eixoX: eixox,
-    //   eixoY: eixoy
-    // })
+    setRvCirculosEixoX([...rvtCirculosEixoX, eixox]);
+    setRvCirculosEixoY([...rvtCirculosEixoY, eixoy]);
 
     for (let i = 0; i < allCirculos.eixoX.length; i++) {
       let x = allCirculos.eixoX[i];
@@ -97,10 +93,37 @@ function App() {
 
   //Refazer circulo
   function refazerCirculo() {
+    let pontos: JSX.Element[] = [];
+
+    let eixoX: number[] = allCirculos.eixoX;
+    let eixoY: number[] = allCirculos.eixoY;
+
+    if (!rvtCirculosEixoX.length && !rvtCirculosEixoY.length) {
+      alert('não há elementos para retornarem');
+      return;
+    }
+
+    let eixox = rvtCirculosEixoX.pop() as number;
+    let eixoy = rvtCirculosEixoY.pop() as number;
+
+    eixoX.push(eixox);
+    eixoY.push(eixoy);
+
+    setAllCirculos({
+      eixoX: eixoX,
+      eixoY: eixoY
+    })
+
+    for (let i = 0; i < allCirculos.eixoX.length; i++) {
+      let x = allCirculos.eixoX[i];
+      let y = allCirculos.eixoY[i];
+      pontos.push(
+        <Ponto x={x} y={y} key={i} />
+      )
+    }
+    setJsxCirculos({ circulos: pontos });
 
   }
-
-  console.log(allCirculos.eixoX.length)
 
   return (
     <Element id="container">
@@ -116,3 +139,4 @@ function App() {
 }
 
 export default App;
+
